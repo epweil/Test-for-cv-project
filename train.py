@@ -65,7 +65,7 @@ class MyDataset(Dataset):
         # Normalize target images to [-1, 1]
         target = (target.astype(np.float32) / 127.5) - 1.0
     
-        return dict(png=target, txt=prompt, hint=source)
+        return dict(png=target, txt=prompt, hint=source, jpg=target)
 dataset = MyDataset()
 print(len(dataset))
 
@@ -73,9 +73,11 @@ item = dataset[0]
 png = item['png']
 txt = item['txt']
 hint = item['hint']
+jpg = item['jpg']
 print(txt)
 print(png.shape)
 print(hint.shape)
+print(jpg.shape)
 
 input_path = './models/v2-1_512-ema-pruned.ckpt'
 output_path = './models/control_sd21_ini.ckpt'
