@@ -149,7 +149,7 @@ model.only_mid_control = only_mid_control
 
 # Misc
 dataset = MyDataset()  # Replace with your dataset implementation
-dataloader = DataLoader(dataset, num_workers=16, batch_size=batch_size, shuffle=True)
+dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
 
 # Define a custom logger callback for logging steps
 class StepLogger(Callback):
@@ -176,7 +176,7 @@ trainer = pl.Trainer(
 
 # Train!
 print("TRAINING!!!")
-mp.set_start_method('spawn', force=True)
+mp.set_start_method('fork' force = True)
 mp.freeze_support()
 trainer.fit(model, dataloader)
 
