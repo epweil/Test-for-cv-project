@@ -174,6 +174,6 @@ trainer = pl.Trainer(
 
 # Train!
 print("TRAINING!!!")
-mp.set_start_method('spawn')
+mp.set_start_method('spawn', force=True)
 trainer.fit(model, dataloader)
 
