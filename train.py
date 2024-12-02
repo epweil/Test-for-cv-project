@@ -81,9 +81,9 @@ input_path = './models/v2-1_512-ema-pruned.ckpt'
 output_path = './models/control_sd21_ini.ckpt'
 
 # Ensure paths are valid
-assert os.path.exists(input_path), 'Input model does not exist.'
-assert not os.path.exists(output_path), 'Output filename already exists.'
-assert os.path.exists(os.path.dirname(output_path)), 'Output path is not valid.'
+# assert os.path.exists(input_path), 'Input model does not exist.'
+# assert not os.path.exists(output_path), 'Output filename already exists.'
+# assert os.path.exists(os.path.dirname(output_path)), 'Output path is not valid.'
 
 # Function to extract node names
 def get_node_name(name, parent_name):
@@ -151,7 +151,7 @@ dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=T
 
 # Define a custom logger callback for logging steps
 class StepLogger(Callback):
-    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
         if trainer.global_step % logger_freq == 0:
             print(f"Step {trainer.global_step}/{trainer.max_steps}")
 
