@@ -124,51 +124,29 @@ torch.save(model.state_dict(), output_path)
 print('Done.')
 print('Done.')
 
-# should see something like
-# These weights are newly added ...
-# These weights are newly added ...
-# Done.
-
-resume_path = './models/control_sd21_ini.ckpt'  # Pretrained model checkpoint path
+# Configs
+resume_path = './models/control_sd21_ini.ckpt'
 batch_size = 4
-logger_freq = 300  # Log progress every 100 steps
+logger_freq = 300
 learning_rate = 1e-5
 sd_locked = True
 only_mid_control = False
 
-# First, use CPU to load models. Pytorch Lightning will automatically move it to GPUs.
+
+# First use cpu to load models. Pytorch Lightning will automatically move it to GPUs.
 model = create_model('./models/cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(resume_path, location='cpu'))
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
 model.only_mid_control = only_mid_control
 
+
 # Misc
-dataset = MyDataset()  # Replace with your dataset implementation
-dataloader = DataLoader(dataset, num_workers=16, batch_size=batch_size, shuffle=True)
+dataset = MyDataset()
+dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
+logger = ImageLogger(batch_frequency=logger_freq)
+trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger])
 
-# Define a custom logger callback for logging steps
-class StepLogger(Callback):
-    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
-        if trainer.global_step % logger_freq == 0:
-            print(f"Step {trainer.global_step}/{trainer.max_steps}")
-
-# Add ModelCheckpoint callback to save the model every 2500 steps
-checkpoint_callback = ModelCheckpoint(
-    dirpath='./checkpoints',  # Directory to save checkpoints
-    filename='control_sd21-step={step}-loss={loss:.2f}',  # Filename template
-    save_top_k=-1,  # Save all checkpoints
-    every_n_train_steps=2500  # Save every 2500 steps
-)
-
-# Trainer with StepLogger and ModelCheckpoint
-trainer = pl.Trainer(
-    accelerator='gpu', 
-    precision=32,
-    callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
-    max_steps=20000,
-    devices=1# Set a maximum number of steps if needed
-)
 
 # Train!
 trainer.fit(model, dataloader)
