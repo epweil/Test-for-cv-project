@@ -169,11 +169,9 @@ trainer = pl.Trainer(
     precision=32,
     callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
     max_steps=20000,
-    devices=2# Set a maximum number of steps if needed
+    devices=1# Set a maximum number of steps if needed
 )
 
 # Train!
-print("TRAINING!!!")
-mp.set_start_method('spawn', force=True)
 trainer.fit(model, dataloader)
 
