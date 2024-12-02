@@ -166,11 +166,10 @@ checkpoint_callback = ModelCheckpoint(
 # Trainer with StepLogger and ModelCheckpoint
 trainer = pl.Trainer(
     accelerator='gpu', 
-    devices=2,
+    devices=1,
     precision=32,
     callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
     max_steps=20000, # Set a maximum number of steps if needed
-    num_workers=0
 )
 
 # Train!
