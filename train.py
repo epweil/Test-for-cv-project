@@ -95,6 +95,7 @@ only_mid_control = False
 
 # First use cpu to load models. Pytorch Lightning will automatically move it to GPUs.
 model = create_model('./models/cldm_v21.yaml').cpu()
+torch.save(model.state_dict(), output_path)
 model.load_state_dict(load_state_dict(resume_path, location='cpu'))
 model.learning_rate = learning_rate
 model.sd_locked = sd_locked
