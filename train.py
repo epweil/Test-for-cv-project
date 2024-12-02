@@ -89,7 +89,6 @@ output_path = './models/control_sd21_ini.ckpt'
 
 
 
-# Function to extract node names
 def get_node_name(name, parent_name):
     if len(name) <= len(parent_name):
         return False, ''
@@ -98,19 +97,16 @@ def get_node_name(name, parent_name):
         return False, ''
     return True, name[len(parent_name):]
 
-# Load model configuration
+
 model = create_model(config_path='./models/cldm_v21.yaml')
 
-# Load pretrained weights
 pretrained_weights = torch.load(input_path)
 if 'state_dict' in pretrained_weights:
     pretrained_weights = pretrained_weights['state_dict']
 
-# Initialize the state dictionary for the new model
 scratch_dict = model.state_dict()
-target_dict = {}
 
-# Map weights from the pretrained model
+target_dict = {}
 for k in scratch_dict.keys():
     is_control, name = get_node_name(k, 'control_')
     if is_control:
@@ -123,11 +119,9 @@ for k in scratch_dict.keys():
         target_dict[k] = scratch_dict[k].clone()
         print(f'These weights are newly added: {k}')
 
-# Load the updated state dictionary into the model
 model.load_state_dict(target_dict, strict=True)
-
-# Save the updated model
 torch.save(model.state_dict(), output_path)
+print('Done.')
 print('Done.')
 
 # should see something like
@@ -137,7 +131,7 @@ print('Done.')
 
 resume_path = './models/control_sd21_ini.ckpt'  # Pretrained model checkpoint path
 batch_size = 4
-logger_freq = 2000  # Log progress every 100 steps
+logger_freq = 300  # Log progress every 100 steps
 learning_rate = 1e-5
 sd_locked = True
 only_mid_control = False
