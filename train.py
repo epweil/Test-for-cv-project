@@ -18,7 +18,8 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
-
+from multiprocessing import freeze_support
+freeze_support()
 class MyDataset(Dataset):
     def __init__(self):
         self.data = []
