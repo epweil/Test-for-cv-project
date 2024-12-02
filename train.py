@@ -150,12 +150,7 @@ dataset = MyDataset()  # Replace with your dataset implementation
 dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
 
 # Define a custom logger callback for logging steps
-class StepLogger(Callback):
-    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
-        if trainer.global_step % logger_freq == 0:
-            print(f"Step {trainer.global_step}/{trainer.max_steps}")
-    def on_train_batch_start(self, batch, batch_idx, dataloader_idx): 
-        pass
+
 
 # Add ModelCheckpoint callback to save the model every 2500 steps
 checkpoint_callback = ModelCheckpoint(
@@ -170,7 +165,7 @@ trainer = pl.Trainer(
     accelerator='gpu', 
     devices=2,
     precision=32,
-    callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
+    callbacks=[ImageLogger(batch_frequency=logger_freq), checkpoint_callback],
     max_steps=20000  # Set a maximum number of steps if needed
 )
 
