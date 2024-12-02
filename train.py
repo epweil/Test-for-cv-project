@@ -135,7 +135,7 @@ print('Done.')
 
 resume_path = './models/control_sd21_ini.ckpt'  # Pretrained model checkpoint path
 batch_size = 4
-logger_freq = 250  # Log progress every 100 steps
+logger_freq = 2000  # Log progress every 100 steps
 learning_rate = 1e-5
 sd_locked = True
 only_mid_control = False
@@ -149,7 +149,7 @@ model.only_mid_control = only_mid_control
 
 # Misc
 dataset = MyDataset()  # Replace with your dataset implementation
-dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
+dataloader = DataLoader(dataset, num_workers=16, batch_size=batch_size, shuffle=True)
 
 # Define a custom logger callback for logging steps
 class StepLogger(Callback):
@@ -171,7 +171,8 @@ trainer = pl.Trainer(
     devices=1,
     precision=32,
     callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
-    max_steps=20000, # Set a maximum number of steps if needed
+    max_steps=20000,
+    num_workers=2# Set a maximum number of steps if needed
 )
 
 # Train!
