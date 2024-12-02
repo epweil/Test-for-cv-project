@@ -176,7 +176,7 @@ trainer = pl.Trainer(
 
 # Train!
 print("TRAINING!!!")
-mp.set_start_method('fork' force = True)
+mp.set_start_method('fork', force = True)
 mp.freeze_support()
 trainer.fit(model, dataloader)
 
