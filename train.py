@@ -151,9 +151,11 @@ dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=T
 
 # Define a custom logger callback for logging steps
 class StepLogger(Callback):
-    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
         if trainer.global_step % logger_freq == 0:
             print(f"Step {trainer.global_step}/{trainer.max_steps}")
+    def on_train_batch_start(self, batch, batch_idx, dataloader_idx): 
+        pass
 
 # Add ModelCheckpoint callback to save the model every 2500 steps
 checkpoint_callback = ModelCheckpoint(
