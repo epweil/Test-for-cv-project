@@ -169,7 +169,7 @@ trainer = pl.Trainer(
     devices=2,
     precision=32,
     callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
-    max_steps=20000  # Set a maximum number of steps if needed
+    max_steps=20000, # Set a maximum number of steps if needed
     num_workers=0
 )
 
