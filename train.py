@@ -10,7 +10,7 @@ import torch
 import pytorch_lightning as pl
 from share import *
 from cldm.model import create_model
-
+import torch.multiprocessing as mp
 from share import *
 
 
@@ -168,14 +168,14 @@ checkpoint_callback = ModelCheckpoint(
 # Trainer with StepLogger and ModelCheckpoint
 trainer = pl.Trainer(
     accelerator='gpu', 
-    devices=1,
     precision=32,
     callbacks=[ImageLogger(batch_frequency=logger_freq), StepLogger(), checkpoint_callback],
     max_steps=20000,
-    num_workers=2# Set a maximum number of steps if needed
+    devices=2# Set a maximum number of steps if needed
 )
 
 # Train!
 print("TRAINING!!!")
+mp.set_start_method('spawn')
 trainer.fit(model, dataloader)
 
