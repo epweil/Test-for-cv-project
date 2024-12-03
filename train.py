@@ -149,7 +149,7 @@ model.only_mid_control = only_mid_control
 
 # Misc
 dataset = MyDataset()  # Replace with your dataset implementation
-dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
+dataloader = DataLoader(dataset, num_workers=8, batch_size=batch_size, shuffle=True)
 
 
 # Add ModelCheckpoint callback to save the model every 2500 steps
@@ -161,7 +161,7 @@ checkpoint_callback = ModelCheckpoint(
 )
 
 # Trainer with StepLogger and ModelCheckpoint
-trainer = pl.Trainer(gpus=1, precision=32, callbacks=[ImageLogger(batch_frequency=logger_freq), checkpoint_callback])
+trainer = pl.Trainer(strategy="ddp", devices=2, accelerator="gpu", gpus=1, precision=8, callbacks=[ImageLogger(batch_frequency=logger_freq), checkpoint_callback], accumulate_grad_batches=4)
 # Train!
 print("TRAINING!!!")
 trainer.fit(model, dataloader)
