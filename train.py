@@ -161,7 +161,7 @@ checkpoint_callback = ModelCheckpoint(
 )
 
 # Trainer with StepLogger and ModelCheckpoint
-trainer = pl.Trainer(strategy="ddp", devices=2, accelerator="gpu", gpus=1, precision=8, callbacks=[ImageLogger(batch_frequency=logger_freq), checkpoint_callback], accumulate_grad_batches=4)
+trainer = pl.Trainer(strategy="ddp", devices=2, accelerator="gpu", gpus=2, precision=16, callbacks=[ImageLogger(batch_frequency=logger_freq), checkpoint_callback], accumulate_grad_batches=4)
 # Train!
 print("TRAINING!!!")
 trainer.fit(model, dataloader)
